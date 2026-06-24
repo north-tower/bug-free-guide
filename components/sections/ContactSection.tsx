@@ -1,118 +1,183 @@
-import { PortableText } from "@portabletext/react";
 import Link from "next/link";
 import { defineQuery } from "next-sanity";
+import WorldMapDemo from "@/components/world-map-demo";
 import { sanityFetch } from "@/sanity/lib/live";
+import { ContactForm } from "./ContactForm";
 
-const ABOUT_QUERY = defineQuery(`*[_id == "singleton-profile"][0]{
-  firstName,
-  lastName,
-  fullBio,
-  yearsOfExperience,
-  stats,
+const PROFILE_QUERY = defineQuery(`*[_id == "singleton-profile"][0]{
   email,
   phone,
-  location
+  location,
+  socialLinks
 }`);
 
-export async function AboutSection() {
-  const { data: profile } = await sanityFetch({ query: ABOUT_QUERY });
+export async function ContactSection() {
+  const { data: profile } = await sanityFetch({ query: PROFILE_QUERY });
 
   if (!profile) {
     return null;
   }
 
   return (
-    <section id="about" className="py-20 px-6">
+    <section id="contact" className="py-20 px-6 pb-40 bg-muted/30">
+      <WorldMapDemo />
+
       <div className="container mx-auto max-w-4xl">
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">About Me</h2>
-          <p className="text-xl text-muted-foreground">Get to know me better</p>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Get In Touch</h2>
+          <p className="text-xl text-muted-foreground">
+            Wherever you are in the world, let&apos;s work together on your next
+            project.
+          </p>
         </div>
 
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          {profile.fullBio && (
-            <PortableText
-              value={profile.fullBio}
-              components={{
-                block: {
-                  normal: ({ children }) => (
-                    <p className="text-muted-foreground leading-relaxed mb-4">
-                      {children}
-                    </p>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="text-3xl font-bold mt-8 mb-4">{children}</h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3 className="text-2xl font-semibold mt-6 mb-3">
-                      {children}
-                    </h3>
-                  ),
-                  blockquote: ({ children }) => (
-                    <blockquote className="border-l-4 border-primary pl-4 italic my-4">
-                      {children}
-                    </blockquote>
-                  ),
-                },
-                marks: {
-                  strong: ({ children }) => (
-                    <strong className="font-semibold text-foreground">
-                      {children}
-                    </strong>
-                  ),
-                  em: ({ children }) => <em className="italic">{children}</em>,
-                  link: ({ children, value }) => {
-                    const href = value?.href || "";
-                    const isExternal = href.startsWith("http");
-                    return (
-                      <Link
-                        href={href}
-                        target={isExternal ? "_blank" : undefined}
-                        rel={isExternal ? "noopener noreferrer" : undefined}
-                        className="text-primary hover:underline"
-                      >
-                        {children}
-                      </Link>
-                    );
-                  },
-                },
-                list: {
-                  bullet: ({ children }) => (
-                    <ul className="list-disc list-inside space-y-2 mb-4 text-muted-foreground">
-                      {children}
-                    </ul>
-                  ),
-                  number: ({ children }) => (
-                    <ol className="list-decimal list-inside space-y-2 mb-4 text-muted-foreground">
-                      {children}
-                    </ol>
-                  ),
-                },
-              }}
-            />
-          )}
-        </div>
+        <div className="@container">
+          <div className="grid grid-cols-1 @3xl:grid-cols-2 gap-8">
+            {/* Contact Info */}
+            <div className="@container/info space-y-6">
+              <h3 className="text-xl @md/info:text-2xl font-semibold mb-6">
+                Contact Information
+              </h3>
 
-        {/* Stats from CMS */}
-        {profile.stats && profile.stats.length > 0 && (
-          <div className="@container mt-12 pt-12 border-t">
-            <div className="grid grid-cols-2 @lg:grid-cols-4 gap-6">
-              {profile.stats.map((stat, idx) => (
-                <div
-                  key={`${stat.label}-${idx}`}
-                  className="@container/stat text-center"
-                >
-                  <div className="text-3xl @md/stat:text-4xl font-bold text-primary mb-2">
-                    {stat.value}
+              {profile.email && (
+                <div className="flex items-start gap-3 @md/info:gap-4">
+                  <div className="w-10 h-10 @md/info:w-12 @md/info:h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl @md/info:text-2xl">📧</span>
                   </div>
-                  <div className="text-xs @md/stat:text-sm text-muted-foreground">
-                    {stat.label}
+                  <div className="min-w-0">
+                    <h4 className="font-semibold mb-1 text-sm @md/info:text-base">
+                      Email
+                    </h4>
+                    <Link
+                      href={`mailto:${profile.email}`}
+                      className="text-muted-foreground hover:text-primary transition-colors text-xs @md/info:text-sm truncate block"
+                    >
+                      {profile.email}
+                    </Link>
                   </div>
                 </div>
-              ))}
+              )}
+
+              {profile.phone && (
+                <div className="flex items-start gap-3 @md/info:gap-4">
+                  <div className="w-10 h-10 @md/info:w-12 @md/info:h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl @md/info:text-2xl">📱</span>
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-semibold mb-1 text-sm @md/info:text-base">
+                      Phone
+                    </h4>
+                    <Link
+                      href={`tel:${profile.phone}`}
+                      className="text-muted-foreground hover:text-primary transition-colors text-xs @md/info:text-sm"
+                    >
+                      {profile.phone}
+                    </Link>
+                  </div>
+                </div>
+              )}
+
+              {profile.location && (
+                <div className="flex items-start gap-3 @md/info:gap-4">
+                  <div className="w-10 h-10 @md/info:w-12 @md/info:h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <span className="text-xl @md/info:text-2xl">📍</span>
+                  </div>
+                  <div className="min-w-0">
+                    <h4 className="font-semibold mb-1 text-sm @md/info:text-base">
+                      Location
+                    </h4>
+                    <p className="text-muted-foreground text-xs @md/info:text-sm">
+                      {profile.location}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {profile.socialLinks && (
+                <div className="pt-6">
+                  <h4 className="font-semibold mb-4 text-sm @md/info:text-base">
+                    Follow Me
+                  </h4>
+                  <div className="flex flex-wrap gap-2 @md/info:gap-3">
+                    {profile.socialLinks.github && (
+                      <Link
+                        href={profile.socialLinks.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 @md/info:px-4 @md/info:py-2 rounded-lg border hover:bg-accent transition-colors text-xs @md/info:text-sm"
+                      >
+                        GitHub
+                      </Link>
+                    )}
+                    {profile.socialLinks.linkedin && (
+                      <Link
+                        href={profile.socialLinks.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 @md/info:px-4 @md/info:py-2 rounded-lg border hover:bg-accent transition-colors text-xs @md/info:text-sm"
+                      >
+                        LinkedIn
+                      </Link>
+                    )}
+                    {profile.socialLinks.twitter && (
+                      <Link
+                        href={profile.socialLinks.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 @md/info:px-4 @md/info:py-2 rounded-lg border hover:bg-accent transition-colors text-xs @md/info:text-sm"
+                      >
+                        Twitter
+                      </Link>
+                    )}
+                    {profile.socialLinks.website && (
+                      <Link
+                        href={profile.socialLinks.website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 @md/info:px-4 @md/info:py-2 rounded-lg border hover:bg-accent transition-colors text-xs @md/info:text-sm"
+                      >
+                        Website
+                      </Link>
+                    )}
+                    {profile.socialLinks.medium && (
+                      <Link
+                        href={profile.socialLinks.medium}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 @md/info:px-4 @md/info:py-2 rounded-lg border hover:bg-accent transition-colors text-xs @md/info:text-sm"
+                      >
+                        Medium
+                      </Link>
+                    )}
+                    {profile.socialLinks.devto && (
+                      <Link
+                        href={profile.socialLinks.devto}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 @md/info:px-4 @md/info:py-2 rounded-lg border hover:bg-accent transition-colors text-xs @md/info:text-sm"
+                      >
+                        Dev.to
+                      </Link>
+                    )}
+                    {profile.socialLinks.youtube && (
+                      <Link
+                        href={profile.socialLinks.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 @md/info:px-4 @md/info:py-2 rounded-lg border hover:bg-accent transition-colors text-xs @md/info:text-sm"
+                      >
+                        YouTube
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Contact Form */}
+            <ContactForm />
           </div>
-        )}
+        </div>
       </div>
     </section>
   );

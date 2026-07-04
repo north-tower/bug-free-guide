@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { defineQuery } from "next-sanity";
-import WorldMapDemo from "@/components/world-map-demo";
+import WorldMapDemo from "./../ui/world-map.tsx";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ContactForm } from "./ContactForm";
 

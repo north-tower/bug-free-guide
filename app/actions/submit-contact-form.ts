@@ -2,6 +2,7 @@
 
 import { serverClient } from "@/sanity/lib/serverClient";
 
+
 export async function submitContactForm(formData: FormData) {
   try {
     const name = formData.get("name") as string;

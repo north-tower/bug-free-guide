@@ -12,6 +12,7 @@ import { structureTool } from "sanity/structure";
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import { apiVersion, dataset, projectId } from "./sanity/env";
 import { schema } from "./sanity/schemaTypes";
+import { resolve } from "./sanity/presentation/resolve";
 import { structure } from "./sanity/structure";
 
 export default defineConfig({
@@ -33,13 +34,15 @@ export default defineConfig({
       title: "Content",
     }),
     presentationTool({
+      resolve,
       previewUrl: {
-        initial: process.env.SANITY_STUDIO_PREVIEW_ORIGIN,
-        preview: "/",
+        initial:
+          process.env.SANITY_STUDIO_PREVIEW_ORIGIN || "http://localhost:3000",
         previewMode: {
           enable: "/api/draft-mode/enable",
         },
       },
+      allowOrigins: ["http://localhost:*", "http://127.0.0.1:*"],
     }),
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin

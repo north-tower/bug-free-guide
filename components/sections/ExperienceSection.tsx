@@ -1,6 +1,5 @@
-import { PortableText } from "@portabletext/react";
 import Image from "next/image";
-import { defineQuery } from "next-sanity";
+import { defineQuery, PortableText } from "next-sanity";
 import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
 

@@ -24,6 +24,8 @@ export default defineType({
           { title: "Database", value: "database" },
           { title: "Mobile", value: "mobile" },
           { title: "Cloud", value: "cloud" },
+          { title: "Payments & Integrations", value: "payments" },
+          { title: "Data/Automation", value: "data-automation" },
           { title: "Testing", value: "testing" },
           { title: "Design", value: "design" },
           { title: "Tools", value: "tools" },

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "typegen": "sanity schema extract && sanity typegen generate"
+    "typegen": "sanity schema extract && sanity typegen generate",
+    "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.5.7",

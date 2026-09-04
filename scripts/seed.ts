@@ -118,7 +118,18 @@ async function idsOfTypes(types: readonly string[]) {
   return documents;
 }
 
-async function commit(mutations: object[], label: string) {
+type MutationPayload =
+  | { delete: { id: string } }
+  | { createOrReplace: Record<string, unknown> }
+  | {
+      patch: {
+        id: string;
+        set?: Record<string, unknown>;
+        unset?: string[];
+      };
+    };
+
+async function commit(mutations: MutationPayload[], label: string) {
   if (mutations.length === 0) return;
 
   console.log(`${dryRun ? "[dry-run] " : ""}${label}: ${mutations.length} mutation(s)`);
@@ -127,7 +138,10 @@ async function commit(mutations: object[], label: string) {
   const chunkSize = 80;
   for (let index = 0; index < mutations.length; index += chunkSize) {
     const chunk = mutations.slice(index, index + chunkSize);
-    await client.mutate(chunk, { autoGenerateArrayKeys: false, visibility: "async" });
+    await client.mutate(chunk, {
+      autoGenerateArrayKeys: false,
+      visibility: "async",
+    });
   }
 }
 
@@ -278,7 +292,7 @@ async function seed() {
     },
   };
 
-  const patchMutations: object[] = [];
+  const patchMutations: MutationPayload[] = [];
 
   if (existingProfile?._id) {
     patchMutations.push({

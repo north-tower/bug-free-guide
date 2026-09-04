@@ -60,7 +60,7 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-        <SidebarProvider>
+        <SidebarProvider defaultOpen={false}>
         <SidebarInset>
 {children}
         </SidebarInset>

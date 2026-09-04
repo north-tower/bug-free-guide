@@ -46,7 +46,9 @@ type SiteMetadataQueryResult = {
 };
 
 function getSiteUrl() {
-  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  const configuredUrl = (
+    process.env.SITE_URL || process.env.NEXT_PUBLIC_SITE_URL
+  )?.trim();
   if (configuredUrl) return configuredUrl.replace(/\/$/, "");
 
   if (process.env.VERCEL_URL) {

@@ -51,17 +51,21 @@ function argValue(flag: string) {
 }
 
 const dryRun = process.argv.includes("--dry-run");
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const projectId =
+  process.env.SANITY_PROJECT_ID || process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
 const dataset =
-  argValue("--dataset") || process.env.NEXT_PUBLIC_SANITY_DATASET;
+  argValue("--dataset") ||
+  process.env.SANITY_DATASET ||
+  process.env.NEXT_PUBLIC_SANITY_DATASET;
 const token =
   process.env.SANITY_API_WRITE_TOKEN || process.env.SANITY_SERVER_API_TOKEN;
-const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2026-06-24";
+const apiVersion =
+  process.env.SANITY_API_VERSION ||
+  process.env.NEXT_PUBLIC_SANITY_API_VERSION ||
+  "2026-06-24";
 
 if (!projectId || !dataset) {
-  throw new Error(
-    "Missing NEXT_PUBLIC_SANITY_PROJECT_ID or NEXT_PUBLIC_SANITY_DATASET",
-  );
+  throw new Error("Missing SANITY_PROJECT_ID or SANITY_DATASET");
 }
 
 if (!token) {
